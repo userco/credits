@@ -22,7 +22,7 @@
 			  </div><br />
 		@endif
 		{{ Form::open(array('method'=>'post', 'url' => '/credits_list','id' => 'form')) }}
-		<table>
+		<table class="table">
 		<tr>
 		<td>	{{Form::label('min_period', 'Min period')}} </td>
 		<td>	{{ Form::text('min_period', null, array('id' => 'minp'))}} </td>
@@ -43,13 +43,12 @@
 		{{ Form::close() }}
 		<br>
 		@isset($credits)
-		<table>
+		<table class="table">
 		<tr>
 			<td>Credit ID</td>
 			<td> Period </td>
 			<td> Amount </td>
 			<td>Invested amount</td>
-			<td>You have invested</td>
 			<td>Action</td>
 		<tr>
 		
@@ -57,9 +56,8 @@
         <tr>
             <td>{{$credit['id']}}</td>
 			<td>{{$credit['period']}}</td>
-			<td>{{$credit['amount']}}</td>
+			<td>{{$credit['total']}}</td>
 			<td>{{$credit['invested_amount']}}</td>
-			<td></td>
 			<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit['id']],['class' => 'btn btn-danger']) }}</td>
 		</tr>	
 			@endforeach
