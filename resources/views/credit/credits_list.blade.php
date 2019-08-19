@@ -54,11 +54,11 @@
 		
 			@foreach($credits as $credit) 
         <tr>
-            <td>{{$credit['id']}}</td>
-			<td>{{$credit['period']}}</td>
-			<td>{{$credit['total']}}</td>
-			<td>{{$credit['invested_amount']}}</td>
-			<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit['id']],['class' => 'btn btn-danger']) }}</td>
+            <td>{{$credit->id}}</td>
+			<td>{{$credit->period}}</td>
+			<td>{{$credit->total}}</td>
+			<td>{{$credit->invested_amount}}</td>
+			<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
 		</tr>	
 			@endforeach
 		</table>

@@ -18,17 +18,17 @@ class CreditController extends Controller{
 	public function getList(Request $request)
 
 	{	
-		$credits = Credit::all();
-		return View::make('credit/credits_list')->with(array ('credits'=>$credits));		
+		//$credits = Credit::all();
+		return View::make('credit/credits_list');//->with(array ('credits'=>$credits));		
 	}
 
 
 
 	public function postList(CreditPostListRequest $request){
 		
-		$credits = Credit::all();
-
-		if($request->isMethod('post') && $request->input('submit')){
+		//$credits = Credit::all();
+		$credits= [];
+		//if($request->isMethod('post') && $request->input('submit')){
 			
 			$input = Input::get();
 			$max_period = $input['max_period'];
@@ -45,8 +45,8 @@ class CreditController extends Controller{
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->get();
-			
-		}
+			//dd($credits);
+		//}
 		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
 	}
 	public function getInvest(Request $request, $creditId)

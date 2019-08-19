@@ -24,15 +24,15 @@ class CreditPostListRequest extends FormRequest
     public function rules()
     {
         return [
-              'maxp' => 'required',
-			  'maxa' => 'required',
+              'max_period' => 'required',
+			  'max_amount' => 'required',
         ];
     }
 	public function messages()
 	{
 		return [
-			'maxp.required' => 'A max period is required',
-			'maxa.required'  => 'A max amount is required',
+			'max_period.required' => 'A max period is required',
+			'max_amount.required'  => 'A max amount is required',
 		];
 	}
 }
