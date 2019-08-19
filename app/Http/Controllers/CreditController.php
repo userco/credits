@@ -16,7 +16,7 @@ class CreditController extends Controller{
 	public function getList(Request $request)
 
 	{	
-		//$credits = Credit::all();
+		$credits = Credit::all();
 		return View::make('credit/credits_list');//->with(array ('credits'=>$credits));		
 	}
 
@@ -36,14 +36,14 @@ class CreditController extends Controller{
 			$min_amount = ($input['min_amount'])? $input['min_amount']:1;
 			
 			
-			/*$credits = DB::table('credits')
+			$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
 						 ->where('period', '>=', $min_period)
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->get();
-			*/
+			
 		}
 		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
 	}

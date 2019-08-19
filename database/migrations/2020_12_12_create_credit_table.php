@@ -13,7 +13,7 @@ class CreditTable extends Migration
      */
     public function up()
     {
-        Schema::create('credits', function (Blueprint $table) {
+        Schema::create('credit', function (Blueprint $table) {
             $table->bigIncrements('id');
 			$table->string('external_id');
             $table->integer('period');
@@ -31,6 +31,6 @@ class CreditTable extends Migration
      */
     public function down()
     {
-         Schema::drop('credits');
+         Schema::drop('credit');
     }
 }

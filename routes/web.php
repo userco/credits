@@ -26,4 +26,14 @@ Route::post('/credits_list', [
 	'middleware' => ['web'],
 	'uses'      => 'CreditController@postList',
  ]);
+Route::get('/invest', [
+	'as'        => 'invest',
+	'middleware' => ['web'],
+	'uses'      => 'CreditController@getInvest',
+ ]);
+Route::post('/invest', [
+	'as'        => 'invest',
+	'middleware' => ['web'],
+	'uses'      => 'CreditController@postInvest',
+ ]);
 Route::get('/home', 'HomeController@index')->name('home');
