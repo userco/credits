@@ -9,7 +9,7 @@ use DB;
 use View;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-
+use App\Http\Requests\CreditPostListRequest;
 
 class CreditController extends Controller{
 
@@ -17,12 +17,12 @@ class CreditController extends Controller{
 
 	{	
 		$credits = Credit::all();
-		return View::make('credit/credits_list');//->with(array ('credits'=>$credits));		
+		return View::make('credit/credits_list')->with(array ('credits'=>$credits));		
 	}
 
 
 
-	public function postList(Request $request){
+	public function postList(CreditPostListRequest $request){
 		
 		$credits = Credit::all();
 
