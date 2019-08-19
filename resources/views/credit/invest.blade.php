@@ -12,6 +12,12 @@
   <body>
 	<div class="container">
 	<h1>Invest in credit</h2>
+	@isset($invested_amount)
+		<p>Invested amount: {{$invested_amount}}</p>
+	@endisset	
+	@isset($investment)
+		<p>You have invested in this credit: {{$investment}}</p>
+	@endisset
 		@if ($errors->any())
 			  <div class="alert alert-danger">
 				<ul>
