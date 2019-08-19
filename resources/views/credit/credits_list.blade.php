@@ -21,7 +21,7 @@
 				</ul>
 			  </div><br />
 		@endif
-		{{ Form::open(array('method'=>'post', 'url' => '/credits_list','id' => 'form','onsubmit'=>'validateForm()')) }}
+		{{ Form::open(array('method'=>'post', 'url' => '/credits_list','id' => 'form')) }}
 		<table>
 		<tr>
 		<td>	{{Form::label('min_period', 'Min period')}} </td>
@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 		<td colspan="4" align="center">
-			{{Form::submit('Save', null, array('class' => 'btn btn-primary', 'id' => 'submit', 'onclick'=>"validateForm()"))}}
+			{{Form::submit('Find', null, array('class' => 'btn btn-primary'))}}
 		</td>
 		</tr>
 		{{ Form::close() }}
@@ -60,7 +60,7 @@
 			<td>{{$credit['amount']}}</td>
 			<td>{{$credit['invested_amount']}}</td>
 			<td></td>
-			<td>{#{ Html::linkRoute('invest', Invest , ['creditId' => $credit['id']],['class' => 'btn btn-danger']) }#}</td>
+			<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit['id']],['class' => 'btn btn-danger']) }}</td>
 		</tr>	
 			@endforeach
 		</table>

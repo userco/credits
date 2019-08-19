@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Credit extends Model
+class CreditInvest extends Model
 {
-    protected $table = 'credit';
+    protected $table = 'invest_credit';
 	protected $fillable = [
-        'id','external_id', 'period', 'total', 'invested_amount', 'type'
+        'id','user_id', 'credit_id', 'investment'
     ];
 	protected $primaryKey = 'id';
 	public $timestamps=true;

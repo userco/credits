@@ -26,12 +26,12 @@ Route::post('/credits_list', [
 	'middleware' => ['web'],
 	'uses'      => 'CreditController@postList',
  ]);
-Route::get('/invest', [
+Route::get('/invest/{creditId}', [
 	'as'        => 'invest',
 	'middleware' => ['web'],
 	'uses'      => 'CreditController@getInvest',
  ]);
-Route::post('/invest', [
+Route::post('/invest/{creditId}', [
 	'as'        => 'invest',
 	'middleware' => ['web'],
 	'uses'      => 'CreditController@postInvest',

@@ -10,6 +10,7 @@ use View;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreditPostListRequest;
+use App\Http\Requests\CreditPostInvestRequest;
 
 class CreditController extends Controller{
 
@@ -46,5 +47,43 @@ class CreditController extends Controller{
 			
 		}
 		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
+	}
+	public function getInvest(Request $request, $creditId)
+	{	
+		//$input = Input::get();
+	   // $invest = $input['creditId'];	
+		//$credit = Credit::find($creditId);
+		//dd($creditId);
+		return View::make('credit/invest')->with(array ('creditId'=>$creditId));		
+	}
+	public function postInvest(CreditPostInvestRequest $request, $creditId)
+	{	
+
+		$user = Auth::user();
+		$userId = $user->id;
+		$credit = Credit::find($creditId);
+		$invested_amount = $credit->invested_amount;
+		$investment = DB::table('invest_credit')
+						 ->select(DB::raw('SUM(investment) as investment'))
+						 ->where('user_id', '=', $userId)
+						 ->where('credit_id', '<=', $creditId)
+						 ->get();
+						 
+		if($request->isMethod('post') && $request->input('submit')){
+			
+			$input = Input::get();
+			$invest = $input['investment'];	
+			$invObj = new CreditInvest;
+			$invObj->user_id = $userId;
+			$invObj->creditId = $creditId;
+			$invObj->investment = $invest;
+			
+			$invObj->save();
+			
+		}	
+		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
+														'investment'     => $investment,
+														'creditId'       => $creditId
+														));		
 	}
 }    
