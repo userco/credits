@@ -16,24 +16,26 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::get('/credits_list', [
-	'as'        => 'credits_list',
-	'middleware' => ['web'],
-	'uses'      => 'CreditController@getList',
- ]);
-Route::post('/credits_list', [
-	'as'        => 'credits_list',
-	'middleware' => ['web'],
-	'uses'      => 'CreditController@postList',
- ]);
-Route::get('/invest/{creditId}', [
-	'as'        => 'invest',
-	'middleware' => ['web'],
-	'uses'      => 'CreditController@getInvest',
- ]);
-Route::post('/invest/{creditId}', [
-	'as'        => 'invest',
-	'middleware' => ['web'],
-	'uses'      => 'CreditController@postInvest',
- ]);
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('/credits_list', [
+		'as'        => 'credits_list',
+		'middleware' => ['web'],
+		'uses'      => 'CreditController@getList',
+	 ]);
+	Route::post('/credits_list', [
+		'as'        => 'credits_list',
+		'middleware' => ['web'],
+		'uses'      => 'CreditController@postList',
+	 ]);
+	Route::get('/invest/{creditId}', [
+		'as'        => 'invest',
+		'middleware' => ['web'],
+		'uses'      => 'CreditController@getInvest',
+	 ]);
+	Route::post('/invest/{creditId}', [
+		'as'        => 'invest',
+		'middleware' => ['web'],
+		'uses'      => 'CreditController@postInvest',
+	 ]);
+	Route::get('/home', 'HomeController@index')->name('home');
+});

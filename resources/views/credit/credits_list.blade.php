@@ -31,9 +31,9 @@
 		</tr>
 		<tr>
 		<td>	{{Form::label('min_amount', 'Min amount')}} </td>
-		<td>	{{ Form::text('min_amount', null, array('id' => 'mina'))}} </td>
+		<td>	{{ Form::text('min_amount', null, array('id' => 'mina'))}}&nbsp;BGN </td>
 		<td>	{{Form::label('max_amount', 'Max amount')}} </td>
-		<td>	{{ Form::text('max_amount', null, array('id' => 'maxa'))}} </td>
+		<td>	{{ Form::text('max_amount', null, array('id' => 'maxa'))}}&nbsp;BGN </td>
 		</tr>
 		<tr>
 		<td colspan="4" align="center">
@@ -42,7 +42,13 @@
 		</tr>
 		{{ Form::close() }}
 		<br>
+		
 		@isset($credits)
+		@if(count($credits)== 0)
+			<div class="alert alert-warning">
+				<strong>Sorry!</strong> No Credits Found.
+			</div>                                      
+		@else
 		<table class="table">
 		<tr>
 			<td>Credit ID</td>
@@ -55,15 +61,15 @@
 			@foreach($credits as $credit) 
         <tr>
             <td>{{$credit->id}}</td>
-			<td>{{$credit->period}}</td>
-			<td>{{$credit->total}}</td>
-			<td>{{$credit->invested_amount}}</td>
+			<td>{{$credit->period}}&nbsp;months</td>
+			<td>{{$credit->total}}&nbsp;BGN</td>
+			<td>{{$credit->invested_amount}}&nbsp;BGN</td>
 			<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
 		</tr>	
 			@endforeach
 		</table>
+		@endif
 		@endisset
-		
 	</div>
 	
   </body>

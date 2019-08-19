@@ -46,7 +46,7 @@ class CreditController extends Controller{
 						 ->where('total', '<=', $max_amount)
 						 ->get();
 			//dd($credits);
-		//}
+			
 		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
 	}
 	public function getInvest(Request $request, $creditId)
@@ -91,10 +91,25 @@ class CreditController extends Controller{
 		$invObj->investment = $invest;
 		
 		$invObj->save();
-		
-		$creditObj->invested_amount = $invested_amount + $invest;	
-		$creditObj->save();
-		
+		$inv = $invested_amount + $invest;
+		if($inv <= $creditObj->total){
+			$creditObj->invested_amount = $inv;	
+			$creditObj->save();
+			$notif = "The data is successfully saved.";
+			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
+														'investment'     => $investment,
+														'creditId'       => $creditId,
+														'notif'         => $notif
+														));		
+		}
+		else{		
+			$notify = "The investments are greater than the credit amount";
+			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
+														'investment'     => $investment,
+														'creditId'       => $creditId,
+														'notify'         => $notify
+														));		
+		}
 		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $investment,
 														'creditId'       => $creditId

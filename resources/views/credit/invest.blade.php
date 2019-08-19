@@ -18,6 +18,17 @@
 	@isset($investment)
 		<p>You have invested in this credit: {{$investment}}</p>
 	@endisset
+	
+	@isset($notify)
+		<div class="alert alert-danger">
+			<p>{{$notify}}</p>
+		</div>
+	@endisset
+	@isset($notif)
+		<div class="alert alert-success">
+			<p>{{$notif}}</p>
+		</div>
+	@endisset
 		@if ($errors->any())
 			  <div class="alert alert-danger">
 				<ul>
@@ -31,7 +42,7 @@
 		<table>
 		<tr>
 		<td>	{{Form::label('investment', 'Invest')}} </td>
-		<td>	{{ Form::text('investment')}} </td>
+		<td>	{{ Form::text('investment')}} BGN</td>
 		</tr>
 		<tr>
 		<td colspan="2" align="center">
