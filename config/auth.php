@@ -12,7 +12,7 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
-
+	
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',
@@ -42,12 +42,11 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
-            'provider' => 'users',
-            'hash' => false,
-        ],
+        'driver' => 'passport',
+        'provider' => 'users',
     ],
-
+ ],
+	
     /*
     |--------------------------------------------------------------------------
     | User Providers
