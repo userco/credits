@@ -16,27 +16,29 @@ use App\Http\Requests\CreditPostInvestRequest;
 class CreditController extends Controller{
 
 	public function getList(Request $request)
-
 	{	
-		//$credits = Credit::all();
-		return View::make('credit/credits_list');//->with(array ('credits'=>$credits));		
+		$credits = Credit::paginate(2);
+		return View::make('credit/credits_list')->with(array ('credits'=>$credits));		
 	}
 
 
 
 	public function postList(CreditPostListRequest $request){
 		
-		//$credits = Credit::all();
-		$credits= [];
-		//if($request->isMethod('post') && $request->input('submit')){
-			
-			$input = Input::get();
+		$credits = Credit::paginate(2);
+	
+		$input = Input::get();
+		if($input){
 			$max_period = $input['max_period'];
+			//dd($max_period);
 			$min_period = ($input['min_period'])?$input['min_period']:0;
+			$request->session()->put('min_period', $min_period);
+			$request->session()->put('max_period', $max_period);
 			
 			$max_amount = $input['max_amount'];
 			$min_amount = ($input['min_amount'])? $input['min_amount']:1;
-			
+			$request->session()->put('min_amount', $min_amount);
+			$request->session()->put('max_amount', $max_amount);
 			
 			$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
@@ -44,9 +46,24 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
-						 ->get();
+						 ->paginate(2);
 			//dd($credits);
+		}	
+		else{
+			$min_period = $request->session()->get('min_period');
+			$max_period = $request->session()->get('max_period');
+			$min_amount = $request->session()->get('min_amount');
+			$max_amount = $request->session()->get('max_amount');
 			
+			$credits = DB::table('credit')
+						 ->select(DB::raw('*'))
+						 ->where('period', '>=', $min_period)
+						 ->where('period', '<=', $max_period)
+						 ->where('total', '>=', $min_amount)
+						 ->where('total', '<=', $max_amount)
+						 ->paginate(2);
+			
+		}	
 		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
 	}
 	public function getInvest(Request $request, $creditId)

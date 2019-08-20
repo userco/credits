@@ -68,8 +68,12 @@
 		</tr>	
 			@endforeach
 		</table>
+			
+		{{ $credits->links() }}
 		@endif
 		@endisset
+		
+		
 	</div>
 	
   </body>
