@@ -76,7 +76,7 @@ class CreditController extends Controller{
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
-						 ->where('credit_id', '<=', $creditId)
+						 ->where('credit_id', '=', $creditId)
 						 ->get()[0];
 		$investment = $investment->investment;
 		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
@@ -95,7 +95,7 @@ class CreditController extends Controller{
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
-						 ->where('credit_id', '<=', $creditId)
+						 ->where('credit_id', '=', $creditId)
 						 ->get()[0];
 		$investment = $investment->investment;
 			
@@ -108,13 +108,14 @@ class CreditController extends Controller{
 		$invObj->investment = $invest;
 		
 		$invObj->save();
+		$now_invested = $investment + $invest;
 		$inv = $invested_amount + $invest;
 		if($inv <= $creditObj->total){
 			$creditObj->invested_amount = $inv;	
 			$creditObj->save();
 			$notif = "The data is successfully saved.";
-			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
-														'investment'     => $investment,
+			return View::make('credit/invest')->with(array ('invested_amount'=>$inv,
+														'investment'     => $now_invested,
 														'creditId'       => $creditId,
 														'notif'         => $notif
 														));		
