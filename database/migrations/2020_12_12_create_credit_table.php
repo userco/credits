@@ -18,8 +18,10 @@ class CreditTable extends Migration
 			$table->string('external_id');
             $table->integer('period');
 			$table->double('total');
+			$table->string('request_number');
 			$table->double('invested_amount');
 			$table->integer('type');
+			//$table->date('date');
             $table->timestamps();
         });
     }

@@ -98,16 +98,17 @@ class CreditController extends Controller{
 						 ->where('credit_id', '=', $creditId)
 						 ->get()[0];
 		$investment = $investment->investment;
-			
-			
 		$input = Input::get();
-		$invest = $input['investment'];	
-		$invObj = new CreditInvest;
-		$invObj->user_id = $userId;
-		$invObj->credit_id = $creditId;
-		$invObj->investment = $invest;
+		$invest = $input['investment'];		
+		if(!$creditObj){	
 		
-		$invObj->save();
+			$invObj = new CreditInvest;
+			$invObj->user_id = $userId;
+			$invObj->credit_id = $creditId;
+			$invObj->investment = $invest;
+			
+			$invObj->save();
+		}
 		$now_invested = $investment + $invest;
 		$inv = $invested_amount + $invest;
 		if($inv <= $creditObj->total){

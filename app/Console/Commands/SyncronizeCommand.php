@@ -6,6 +6,9 @@ use Illuminate\Console\Command;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use DB;
+use App\Credit;
+use App\Mail\CreditEmail;
+use Illuminate\Support\Facades\Mail;
 
 class SyncronizeCommand extends Command
 {
@@ -55,26 +58,27 @@ class SyncronizeCommand extends Command
 			],
 			
 		]);
-		//$response2 = $guzzle->get('http://dbank.donatix.info/oauth/token');
 		$token = json_decode((string) $response->getBody(), true)['access_token'];
-		//return json_decode((string) $response->getBody(), true)['access_token'];
-		$response3 = $guzzle->get('https://dbank.donatix.info/api/v1/credits',
+		$response2 = $guzzle->get('https://dbank.donatix.info/api/v1/credits',
 		['headers'=> [
 		'Authorization' => 'Bearer ' . $token,  
 		'Accept' => 'application/json',
 		'Content-type' => 'application/json', 'Access-Control-Allow-Methods'=>'GET']]);
-		$credits = json_decode($response3->getBody(),true);
-		//$z = $response3->getBody();
+		$credits = json_decode($response2->getBody(),true);
+		$i=0;
 		
 		foreach($credits as $credit){
+			
+			if($i>4) break;
 			$external_id = $credit['external_id'];
 			$type = $credit['type'];
 			$total = $credit['total'];
 			$request_number = $credit['request_number'];
 			$period = $credit['period'];
 			$date = $credit['date'];
-			
-			$creditObject = DB::table('credits')->where('external_id', $external_id)->first();
+			$this->info($total);
+			$creditObject = DB::table('credit')->where('external_id', $external_id)->first();
+			$this->info($creditObject->id);
 			if(!$creditObject){
 				$creditObject = new Credit;
 				$creditObject->external_id = $external_id;
@@ -82,27 +86,33 @@ class SyncronizeCommand extends Command
 				$creditObject->total = $total;
 				$creditObject->request_number = $request_number;
 				$creditObject->period = $period;
-				$creditObject->date = $date;
+				$creditObject->invested_amount = 0;
 				
-				$creditObject->save;
+				$creditObject->save();
+				$this->info("OK".$i);
+				
 			}else{
 				if($creditObject->total > $total){
 					$creditObject->total = $total;
-					$creditObject->save;
+					$creditObject->save();
 				}
 			}
-			if($creditObject->total < = $creditObject->invested_amount){
+			if($creditObject->total <= $creditObject->invested_amount){
 				$credit_id = $creditObject->id;
 				$emails = DB::table('invest_credit')
 						 ->join('users', 'user_id', '=', 'users.id')
-						 ->select('distinct users.email')
+						 ->select('email')
 						 ->where('credit_id', '=', $credit_id)
 						 ->get();
-				
+				$this->info("Emails:\n");
+				$e = json_decode($emails,true);
+				foreach($e as $e1){
+					$em = $e1['email'];
+				    Mail::to($em)->queue(new CreditEmail($creditObject));
+			    }			
+						 
 			}	
-			//$this->info($y1);
-			//break;
+			$i++;
 		}
-		//$this->info($x);
 	}
 	}
