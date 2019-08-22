@@ -17,6 +17,7 @@ class CreditController extends Controller{
 
 	public function getList(Request $request)
 	{	
+		$credits = Credit::paginate(2);
 		if($request->session()->get('max_period')){
 		$min_period = $request->session()->get('min_period');
 		$max_period = $request->session()->get('max_period');
