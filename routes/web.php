@@ -17,12 +17,12 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('/credits_list', [
+	Route::get('/home', [
 		'as'        => 'credits_list',
 		'middleware' => ['web'],
 		'uses'      => 'CreditController@getList',
 	 ]);
-	Route::post('/credits_list', [
+	Route::post('/home', [
 		'as'        => 'credits_list',
 		'middleware' => ['web'],
 		'uses'      => 'CreditController@postList',
@@ -37,5 +37,5 @@ Route::group(['middleware' => 'auth'], function () {
 		'middleware' => ['web'],
 		'uses'      => 'CreditController@postInvest',
 	 ]);
-	Route::get('/home', 'HomeController@index')->name('home');
+	//Route::get('/home', 'HomeController@index')->name('home');
 });

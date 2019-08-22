@@ -17,8 +17,35 @@ class CreditController extends Controller{
 
 	public function getList(Request $request)
 	{	
-		$credits = Credit::paginate(2);
-		return View::make('credit/credits_list')->with(array ('credits'=>$credits));		
+		if($request->session()->get('max_period')){
+		$min_period = $request->session()->get('min_period');
+		$max_period = $request->session()->get('max_period');
+		$min_amount = $request->session()->get('min_amount');
+		$max_amount = $request->session()->get('max_amount');
+		
+		$credits = DB::table('credit')
+					 ->select(DB::raw('*'))
+					 ->where('period', '>=', $min_period)
+					 ->where('period', '<=', $max_period)
+					 ->where('total', '>=', $min_amount)
+					 ->where('total', '<=', $max_amount)
+					 ->paginate(2);
+		
+		
+		$notice ="<div class='alert alert-info'>";			 
+		$notice .= "<b>Search results</b>  ";
+		$notice .= "<br>";
+		$notice .= "Minimum period is: <b>".$min_period."</b><br>";
+		$notice .= "Maximum period is: <b>".$max_period."</b><br>";
+		$notice .= "Minimum amount is: <b>".$min_amount."</b><br>";
+		$notice .= "Maximum amount is: <b>".$max_amount."</b><br>";
+		$notice .= "</div>";
+		}
+		else{
+			$notice = "";
+		}
+		return View::make('credit/credits_list')->with(array ('credits' => $credits,
+																'notice'=> $notice));		
 	}
 
 
@@ -26,11 +53,9 @@ class CreditController extends Controller{
 	public function postList(CreditPostListRequest $request){
 		
 		$credits = Credit::paginate(2);
-	
 		$input = Input::get();
 		if($input){
 			$max_period = $input['max_period'];
-			//dd($max_period);
 			$min_period = ($input['min_period'])?$input['min_period']:0;
 			$request->session()->put('min_period', $min_period);
 			$request->session()->put('max_period', $max_period);
@@ -47,7 +72,6 @@ class CreditController extends Controller{
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->paginate(2);
-			//dd($credits);
 		}	
 		else{
 			$min_period = $request->session()->get('min_period');
@@ -64,7 +88,17 @@ class CreditController extends Controller{
 						 ->paginate(2);
 			
 		}	
-		return View::make('credit/credits_list')->with(array ('credits'=>$credits));	
+		$notice ="<div class='alert alert-info'>";			 
+		$notice .= "<b>Search results</b>  ";
+		$notice .= "<br>";
+		$notice .= "Minimum period is: <b>".$min_period."</b><br>";
+		$notice .= "Maximum period is: <b>".$max_period."</b><br>";
+		$notice .= "Minimum amount is: <b>".$min_amount."</b><br>";
+		$notice .= "Maximum amount is: <b>".$max_amount."</b><br>";
+		$notice .= "</div>";
+		
+		return View::make('credit/credits_list')->with(array ('credits' => $credits,
+																'notice'=> $notice));	
 	}
 	public function getInvest(Request $request, $creditId)
 	{	

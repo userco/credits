@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
   <meta charset="utf-8">
@@ -9,7 +9,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
-  <body>
+  <body>-->
+@extends('layouts.app')
+@section('content')
 	<div class="container">
 	<h1>Credits List</h2>
 		@if ($errors->any())
@@ -21,35 +23,55 @@
 				</ul>
 			  </div><br />
 		@endif
-		{{ Form::open(array('method'=>'post', 'url' => '/credits_list','id' => 'form')) }}
-		<table class="table">
-		<tr>
-		<td>	{{Form::label('min_period', 'Min period')}} </td>
-		<td>	{{ Form::text('min_period', null, array('id' => 'minp'))}} </td>
-		<td>	{{Form::label('max_period', 'Max period')}} </td>
-		<td>	{{ Form::text('max_period', null, array('id' => 'maxp'))}} </td>
-		</tr>
-		<tr>
-		<td>	{{Form::label('min_amount', 'Min amount')}} </td>
-		<td>	{{ Form::text('min_amount', null, array('id' => 'mina'))}}&nbsp;BGN </td>
-		<td>	{{Form::label('max_amount', 'Max amount')}} </td>
-		<td>	{{ Form::text('max_amount', null, array('id' => 'maxa'))}}&nbsp;BGN </td>
-		</tr>
-		<tr>
-		<td colspan="4" align="center">
-			{{Form::submit('Find', null, array('class' => 'btn btn-primary'))}}
-		</td>
-		</tr>
-		{{ Form::close() }}
-		<br>
+		{{ Form::open(array('method'=>'post', 'url' => '/home','id' => 'form')) }}
+		<div class="form-group row">
+			<div class="col-sm-2">
+				{{Form::label('min_period', 'Min period')}}
+			</div>	
+			<div class="col-sm-4">
+				{{ Form::text('min_period', null, array('id' => 'minp'))}} 
+			</div>	
+			<div class="col-sm-2">
+		    	{{Form::label('max_period', 'Max period')}} 
+			</div>	
+			<div class="col-sm-4">
+				{{ Form::text('max_period', null, array('id' => 'maxp'))}}
+			</div>
+		</div>	
+		<br/>
+		<div class="form-group row">
 		
+			<div class="col-sm-2">
+				{{Form::label('min_amount', 'Min amount')}} 
+			</div>
+			<div class="col-sm-4">	
+				{{ Form::text('min_amount', null, array('id' => 'mina'))}}&nbsp;BGN 
+			</div>
+			<div class="col-sm-2">	
+				{{Form::label('max_amount', 'Max amount')}} 
+			</div>
+			<div class="col-sm-4">	
+				{{ Form::text('max_amount', null, array('id' => 'maxa'))}}&nbsp;BGN 
+			</div>
+		</div>	
+		<div class="form-group row"> 
+			<div class="offset-sm-5 col-sm-3">
+			{!!Form::submit('Find', array('class' => 'btn btn-primary'))!!}
+			</div>
+		</div>
+		{{ Form::close() }}
+	
+		@isset($notice)
+		{!!$notice!!}
+		@endisset
+			
 		@isset($credits)
 		@if(count($credits)== 0)
 			<div class="alert alert-warning">
 				<strong>Sorry!</strong> No Credits Found.
 			</div>                                      
 		@else
-		<table class="table">
+		<table class="table table-stripped">
 		<tr>
 			<td>Credit ID</td>
 			<td> Period </td>
@@ -75,6 +97,6 @@
 		
 		
 	</div>
-	
-  </body>
-</html>
+@endsection	
+  <!--</body>
+</html>-->

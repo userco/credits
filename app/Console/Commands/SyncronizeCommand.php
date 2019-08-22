@@ -43,7 +43,6 @@ class SyncronizeCommand extends Command
      */
     public function handle()
     {
-        //$name = $request->input('user.name');
 		$guzzle = new Client;
 	    $state = \Str::random(40);
 		$response = $guzzle->post('https://dbank.donatix.info/oauth/token', [
