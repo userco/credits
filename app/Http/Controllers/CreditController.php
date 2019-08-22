@@ -36,10 +36,10 @@ class CreditController extends Controller{
 		$notice ="<div class='alert alert-info'>";			 
 		$notice .= "<b>Search results</b>  ";
 		$notice .= "<br>";
-		$notice .= "Minimum period is: <b>".$min_period."</b><br>";
-		$notice .= "Maximum period is: <b>".$max_period."</b><br>";
-		$notice .= "Minimum amount is: <b>".$min_amount."</b><br>";
-		$notice .= "Maximum amount is: <b>".$max_amount."</b><br>";
+		$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
+		$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
+		$notice .= "Minimum amount is: <b>".$min_amount." BGN</b><br>";
+		$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
 		$notice .= "</div>";
 		}
 		else{
@@ -92,10 +92,10 @@ class CreditController extends Controller{
 		$notice ="<div class='alert alert-info'>";			 
 		$notice .= "<b>Search results</b>  ";
 		$notice .= "<br>";
-		$notice .= "Minimum period is: <b>".$min_period."</b><br>";
-		$notice .= "Maximum period is: <b>".$max_period."</b><br>";
-		$notice .= "Minimum amount is: <b>".$min_amount."</b><br>";
-		$notice .= "Maximum amount is: <b>".$max_amount."</b><br>";
+		$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
+		$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
+		$notice .= "Minimum amount is: <b>".$min_amount."BGN</b><br>";
+		$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
 		$notice .= "</div>";
 		
 		return View::make('credit/credits_list')->with(array ('credits' => $credits,
