@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>Invest</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  </head>
-  <body>
+@extends('layouts.app')
+@section('content')
 	<div class="container">
-	<h1>Invest in credit</h2>
+	{!! Html::linkRoute('credits_list', "<< Credits List",null,  array('class' => 'btn btn-primary'))!!}
+	<br>
+	<h1>Invest in credit #{{$creditObj->external_id}}</h2>
+	<div class="alert alert-info">
+	<p>Total: {{$creditObj->total}}</p>
 	@isset($invested_amount)
-		<p>Invested amount: {{$invested_amount}}</p>
+		<p>Invested amount: <b>{{$invested_amount}}</b></p>
 	@endisset	
 	@isset($investment)
-		<p>You have invested in this credit: {{$investment}}</p>
+		<p>You have invested in this credit: <b>{{$investment}}</b></p>
 	@endisset
-	
+	</div>
 	@isset($notify)
 		<div class="alert alert-danger">
 			<p>{{$notify}}</p>
@@ -29,29 +23,29 @@
 			<p>{{$notif}}</p>
 		</div>
 	@endisset
-		@if ($errors->any())
-			  <div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-					  <li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			  </div><br />
-		@endif
-		{{ Form::open(array('method'=>'post', 'url' => 'invest/'.$creditId,'id' => 'form')) }}
-		<table>
-		<tr>
-		<td>	{{Form::label('investment', 'Invest')}} </td>
-		<td>	{{ Form::text('investment')}} BGN</td>
-		</tr>
-		<tr>
-		<td colspan="2" align="center">
-			{{Form::submit('Save', null, array('class' => 'btn btn-primary'))}}
-		</td>
-		</tr>
-		{{ Form::close() }}
-	
-	</div>
-	
-  </body>
-</html>
+	@if ($errors->any())
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+				  <li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div><br />
+	@endif
+	{{ Form::open(array('method'=>'post', 'url' => 'invest/'.$creditObj->id,'id' => 'form')) }}
+		<div class="form-group row">
+			<div class="col-sm-2">
+			{{Form::label('investment', 'Invest')}}
+			</div>
+			<div class="col-sm-3">
+			{{ Form::text('investment')}} BGN
+			</div>
+		</div>	
+		<div class="form-group row">
+			<div class="offset-sm-2 col-sm-3">
+			{!!Form::submit('Save', array('class' => 'btn btn-primary'))!!}
+			</div>
+		</div>	
+	{{ Form::close() }}
+
+@endsection

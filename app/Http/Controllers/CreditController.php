@@ -107,26 +107,27 @@ class CreditController extends Controller{
 		$userId = $user->id;
 		$creditObj = Credit::find($creditId);
 		$invested_amount = $creditObj->invested_amount;
-		//dd($invested_amount);
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
 						 ->where('credit_id', '=', $creditId)
 						 ->get()[0];
 		$investment = $investment->investment;
+
 		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $investment,
-														'creditId'       => $creditId
+														'creditObj'       => $creditObj,
 														));			
 	}
 	public function postInvest(CreditPostInvestRequest $request, $creditId)
 	{	
 
-		$user = Auth::user();
-		$userId = $user->id;
-		$credits = Credit::all();
+		$user      = Auth::user();
+		$userId    = $user->id;
+		$credits   = Credit::all();
 		$creditObj = Credit::find($creditId);
 		$invested_amount = $creditObj->invested_amount;
+		
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
@@ -134,39 +135,38 @@ class CreditController extends Controller{
 						 ->get()[0];
 		$investment = $investment->investment;
 		$input = Input::get();
-		$invest = $input['investment'];		
-		if(!$creditObj){	
+		$invest = $input['investment'];			
 		
+		$now_invested = $investment;
+		if(($invested_amount + $invest) < $creditObj->total){
 			$invObj = new CreditInvest;
-			$invObj->user_id = $userId;
-			$invObj->credit_id = $creditId;
+			$invObj->user_id    = $userId;
+			$invObj->credit_id  = $creditId;
 			$invObj->investment = $invest;
-			
+		
 			$invObj->save();
-		}
-		$now_invested = $investment + $invest;
-		$inv = $invested_amount + $invest;
-		if($inv <= $creditObj->total){
-			$creditObj->invested_amount = $inv;	
+			$creditObj->invested_amount = $invested_amount + $invest;	
 			$creditObj->save();
+			$now_invested += $invest;
+			$invested_amount += $invest;
 			$notif = "The data is successfully saved.";
-			return View::make('credit/invest')->with(array ('invested_amount'=>$inv,
+			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $now_invested,
-														'creditId'       => $creditId,
-														'notif'         => $notif
+														'creditObj'       => $creditObj,
+														'notif'         => $notif,
 														));		
 		}
 		else{		
 			$notify = "The investments are greater than the credit amount";
 			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $investment,
-														'creditId'       => $creditId,
+														'creditObj'       => $creditObj,
 														'notify'         => $notify
 														));		
 		}
 		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $investment,
-														'creditId'       => $creditId
+														'creditObj'       => $creditObj
 														));		
 	}
 	
