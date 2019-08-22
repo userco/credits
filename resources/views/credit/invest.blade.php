@@ -5,7 +5,7 @@
 	<br>
 	<h1>Invest in credit #{{$creditObj->external_id}}</h2>
 	<div class="alert alert-info">
-	<p>Total: {{$creditObj->total}} &nbsp;BGN</p>
+	<p>Total: <b>{{$creditObj->total}} &nbsp;BGN</b></p>
 	@isset($invested_amount)
 		<p>Invested amount: <b>{{$invested_amount}} &nbsp;BGN</b></p>
 	@endisset	

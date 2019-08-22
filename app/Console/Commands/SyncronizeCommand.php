@@ -83,8 +83,11 @@ class SyncronizeCommand extends Command
 			$period = $credit['period'];
 			$date = $credit['date'];
 			$this->info($total);
-			$creditObject = DB::table('credit')->where('external_id', $external_id)->first();
-			$this->info($creditObject->id);
+			$creditId = DB::table('credit')->select('id')->where('external_id', $external_id)->first();
+			$creditId = $creditId->id;
+			$this->info($creditId);
+			$creditObject = Credit::find($creditId);
+			
 			if(!$creditObject){
 				$creditObject = new Credit;
 				$creditObject->external_id = $external_id;
@@ -112,16 +115,17 @@ class SyncronizeCommand extends Command
 						 ->get();
 				$this->info("Emails:\n");
 				$list_emails = [];
-				$e = json_decode($emails,true);
-				foreach($e as $e1){
-					if(!in_array($e1, $list_mails)){
-						$em = $e1['email'];
-						Mail::to($em)->queue(new CreditEmail($creditObject));
-					}	
+				$email_array = json_decode($emails,true);
+				foreach($email_array as $email){
+					$email_address = $email['email'];
+					if(!in_array($email_address, $list_emails)){
+						$list_emails[] = $email_address;
+						Mail::to($email_address)->queue(new CreditEmail($creditObject));
+					}
 			    }			
 						 
 			}	
 			$i++;
 		}
 	}
-	}
+}
