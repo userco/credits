@@ -45,9 +45,12 @@ class SyncronizeCommand extends Command
     {
 		$guzzle = new Client;
 	    $state = \Str::random(40);
-		$response = $guzzle->post('https://dbank.donatix.info/oauth/token', [
-			'headers' => ['Content-Type' => 'application/x-www-form-urlencoded',
-						'Access-Control-Allow-Methods'=>'POST'],
+		$response = $guzzle->post('https://dbank.donatix.info/oauth/token', 
+		[
+			'headers' => [
+							'Content-Type' => 'application/x-www-form-urlencoded',
+							'Access-Control-Allow-Methods'=>'POST'
+						 ],
 			'form_params' => [
 				'grant_type' => 'client_credentials',
 				'client_id' => 1,
@@ -58,11 +61,15 @@ class SyncronizeCommand extends Command
 			
 		]);
 		$token = json_decode((string) $response->getBody(), true)['access_token'];
+		
 		$response2 = $guzzle->get('https://dbank.donatix.info/api/v1/credits',
-		['headers'=> [
-		'Authorization' => 'Bearer ' . $token,  
-		'Accept' => 'application/json',
-		'Content-type' => 'application/json', 'Access-Control-Allow-Methods'=>'GET']]);
+		[
+			'headers'=> [
+							'Authorization' => 'Bearer ' . $token,  
+							'Accept' => 'application/json',
+							'Content-type' => 'application/json', 'Access-Control-Allow-Methods'=>'GET'
+						]
+		]);
 		$credits = json_decode($response2->getBody(),true);
 		$i=0;
 		
@@ -104,10 +111,13 @@ class SyncronizeCommand extends Command
 						 ->where('credit_id', '=', $credit_id)
 						 ->get();
 				$this->info("Emails:\n");
+				$list_emails = [];
 				$e = json_decode($emails,true);
 				foreach($e as $e1){
-					$em = $e1['email'];
-				    Mail::to($em)->queue(new CreditEmail($creditObject));
+					if(!in_array($e1, $list_mails)){
+						$em = $e1['email'];
+						Mail::to($em)->queue(new CreditEmail($creditObject));
+					}	
 			    }			
 						 
 			}	
