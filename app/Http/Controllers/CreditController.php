@@ -18,27 +18,40 @@ class CreditController extends Controller{
 	public function getList(Request $request)
 	{	
 		$credits = Credit::paginate(2);
-		if($request->session()->get('max_period')){
-		$min_period = $request->session()->get('min_period');
-		$max_period = $request->session()->get('max_period');
-		$min_amount = $request->session()->get('min_amount');
-		$max_amount = $request->session()->get('max_amount');
-		$credits = DB::table('credit')
-					 ->select(DB::raw('*'))
-					 ->where('period', '>=', $min_period)
-					 ->where('period', '<=', $max_period)
-					 ->where('total', '>=', $min_amount)
-					 ->where('total', '<=', $max_amount)
-					 ->paginate(2);
-	
-		$notice ="<div class='alert alert-info'>";			 
-		$notice .= "<b>Search results</b>  ";
-		$notice .= "<br>";
-		$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
-		$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
-		$notice .= "Minimum amount is: <b>".$min_amount." BGN</b><br>";
-		$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
-		$notice .= "</div>";
+		if($request->session()){
+			$min_period = ($request->session()->get('min_period')!="")?$request->session()->get('min_period'):0;
+			$max_period = $request->session()->get('max_period')?$request->session()->get('max_period'):36;
+			$min_amount = $request->session()->get('min_amount')?$request->session()->get('min_amount'):1;
+			$max_amount = $request->session()->get('max_amount');
+			if(!$max_amount){
+				
+				$credits = DB::table('credit')
+						 ->select(DB::raw('*'))
+						 ->where('period', '>=', $min_period)
+						 ->where('period', '<=', $max_period)
+						 ->where('total', '>=', $min_amount)
+						 ->paginate(2);
+			}else{
+				$credits = DB::table('credit')
+						 ->select(DB::raw('*'))
+						 ->where('period', '>=', $min_period)
+						 ->where('period', '<=', $max_period)
+						 ->where('total', '>=', $min_amount)
+						 ->where('total', '<=', $max_amount)
+						 ->paginate(2);
+			}	
+			$notice ="<div class='alert alert-info'>";			 
+			$notice .= "<b>Search results</b>  ";
+			$notice .= "<br>";
+			$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
+			$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
+			$notice .= "Minimum amount is: <b>".$min_amount." BGN</b><br>";
+			if(!$max_amount){
+				 $notice .= "Maximum amount is: <b>unlimited</b><br>";
+			}else{	
+				$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
+			}
+			$notice .= "</div>";
 		}
 		else{
 			$notice = "";
@@ -53,15 +66,29 @@ class CreditController extends Controller{
 		
 		$credits = Credit::paginate(2);
 		$input = Input::get();
+		//dd($input);
 		if($input){
-			$max_period = $input['max_period'];
-			$min_period = ($input['min_period'])?$input['min_period']:0;
+			$max_period = ($input['max_period']!="")?$input['max_period']:36;
+			$min_period = ($input['min_period']!="")?$input['min_period']:0;
 			$request->session()->put('min_period', $min_period);
 			$request->session()->put('max_period', $max_period);
 			
-			$max_amount = $input['max_amount'];
-			$min_amount = ($input['min_amount'])? $input['min_amount']:1;
+			$min_amount = ($input['min_amount']!="")? $input['min_amount']:1;
 			$request->session()->put('min_amount', $min_amount);
+			
+			
+			$max_amount = $input['max_amount'];
+			
+			if(!$max_amount){
+				$request->session()->put('max_amount', 0);
+				$credits = DB::table('credit')
+						 ->select(DB::raw('*'))
+						 ->where('period', '>=', $min_period)
+						 ->where('period', '<=', $max_period)
+						 ->where('total', '>=', $min_amount)
+						 ->paginate(2);
+			}else{	
+			
 			$request->session()->put('max_amount', $max_amount);
 			
 			$credits = DB::table('credit')
@@ -71,6 +98,7 @@ class CreditController extends Controller{
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->paginate(2);
+			}			 
 		}	
 		else{
 			$min_period = $request->session()->get('min_period');
@@ -78,13 +106,22 @@ class CreditController extends Controller{
 			$min_amount = $request->session()->get('min_amount');
 			$max_amount = $request->session()->get('max_amount');
 			
-			$credits = DB::table('credit')
+			if(!$max_amount){
+				$credits = DB::table('credit')
+						 ->select(DB::raw('*'))
+						 ->where('period', '>=', $min_period)
+						 ->where('period', '<=', $max_period)
+						 ->where('total', '>=', $min_amount)
+						 ->paginate(2);
+			}else{
+				$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
 						 ->where('period', '>=', $min_period)
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->paginate(2);
+			}
 			
 		}	
 		$notice ="<div class='alert alert-info'>";			 
@@ -93,7 +130,11 @@ class CreditController extends Controller{
 		$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
 		$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
 		$notice .= "Minimum amount is: <b>".$min_amount."BGN</b><br>";
-		$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
+		if(!$max_amount){
+			 $notice .= "Maximum amount is: <b>unlimited</b><br>";
+		}else{	
+			$notice .= "Maximum amount is: <b>".$max_amount." BGN</b><br>";
+		}
 		$notice .= "</div>";
 		
 		return View::make('credit/credits_list')->with(array ('credits' => $credits,
