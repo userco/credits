@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 	<div class="container">
-	{!! Html::linkRoute('credits_list', "<< Credits List",null,  array('class' => 'btn btn-primary'))!!}
+		{!! Html::linkRoute('credits_list', "<< Credits List",null,  array('class' => 'btn btn-primary'))!!}
 	<br>
 	<h1>Invest in credit #{{$creditObj->external_id}}</h2>
 	<div class="alert alert-info">
@@ -35,15 +35,15 @@
 	{{ Form::open(array('method'=>'post', 'url' => 'invest/'.$creditObj->id,'id' => 'form')) }}
 		<div class="form-group row">
 			<div class="col-sm-2">
-			{{Form::label('investment', 'Invest')}}
+				{{Form::label('investment', 'Invest')}}
 			</div>
 			<div class="col-sm-3">
-			{{ Form::text('investment')}} BGN
+				{{ Form::text('investment')}} BGN
 			</div>
 		</div>	
 		<div class="form-group row">
 			<div class="offset-sm-2 col-sm-3">
-			{!!Form::submit('Save', array('class' => 'btn btn-primary'))!!}
+				{!!Form::submit('Save', array('class' => 'btn btn-primary'))!!}
 			</div>
 		</div>	
 	{{ Form::close() }}

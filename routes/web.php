@@ -37,5 +37,4 @@ Route::group(['middleware' => 'auth'], function () {
 		'middleware' => ['web'],
 		'uses'      => 'CreditController@postInvest',
 	 ]);
-	//Route::get('/home', 'HomeController@index')->name('home');
 });

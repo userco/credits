@@ -75,18 +75,16 @@ class SyncronizeCommand extends Command
 		
 		foreach($credits as $credit){
 			
-			if($i>4) break;
+			if($i>10) break;
 			$external_id = $credit['external_id'];
 			$type = $credit['type'];
 			$total = $credit['total'];
 			$request_number = $credit['request_number'];
 			$period = $credit['period'];
 			$date = $credit['date'];
-			$this->info($total);
 			$creditId = DB::table('credit')->select('id')->where('external_id', $external_id)->first();
-			$creditId = $creditId->id;
-			$this->info($creditId);
-			$creditObject = Credit::find($creditId);
+			$id = ($creditId)?$creditId->id :null;
+			$creditObject = ($id)? Credit::find($id): null;
 			
 			if(!$creditObject){
 				$creditObject = new Credit;
@@ -98,7 +96,6 @@ class SyncronizeCommand extends Command
 				$creditObject->invested_amount = 0;
 				
 				$creditObject->save();
-				$this->info("OK".$i);
 				
 			}else{
 				if($creditObject->total > $total){
@@ -113,7 +110,6 @@ class SyncronizeCommand extends Command
 						 ->select('email')
 						 ->where('credit_id', '=', $credit_id)
 						 ->get();
-				$this->info("Emails:\n");
 				$list_emails = [];
 				$email_array = json_decode($emails,true);
 				foreach($email_array as $email){
@@ -124,8 +120,8 @@ class SyncronizeCommand extends Command
 					}
 			    }			
 						 
-			}	
-			$i++;
+			}
+			$i++;		
 		}
 	}
 }

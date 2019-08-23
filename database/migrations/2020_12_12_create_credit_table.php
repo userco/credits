@@ -21,7 +21,6 @@ class CreditTable extends Migration
 			$table->string('request_number');
 			$table->double('invested_amount');
 			$table->integer('type');
-			//$table->date('date');
             $table->timestamps();
         });
     }

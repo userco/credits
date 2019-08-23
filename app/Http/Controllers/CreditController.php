@@ -23,7 +23,6 @@ class CreditController extends Controller{
 		$max_period = $request->session()->get('max_period');
 		$min_amount = $request->session()->get('min_amount');
 		$max_amount = $request->session()->get('max_amount');
-		
 		$credits = DB::table('credit')
 					 ->select(DB::raw('*'))
 					 ->where('period', '>=', $min_period)
@@ -31,8 +30,7 @@ class CreditController extends Controller{
 					 ->where('total', '>=', $min_amount)
 					 ->where('total', '<=', $max_amount)
 					 ->paginate(2);
-		
-		
+	
 		$notice ="<div class='alert alert-info'>";			 
 		$notice .= "<b>Search results</b>  ";
 		$notice .= "<br>";

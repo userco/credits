@@ -24,8 +24,10 @@ class CreditPostListRequest extends FormRequest
     public function rules()
     {
         return [
-              'max_period' => 'required',
-			  'max_amount' => 'required',
+			  'min_period' => 'numeric|gte:0',
+			  'min_amount' => 'numeric|gt:0',
+              'max_period' => 'required_with:min_period|numeric|gte:0|lte:36',
+			  'max_amount' => 'required_with:min_amount|numeric|gt:0',
         ];
     }
 	public function messages()
