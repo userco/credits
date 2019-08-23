@@ -1,7 +1,8 @@
 @extends('layouts.app')
 @section('content')
 	<div class="container">
-		{!! Html::linkRoute('credits_list', "<< Credits List",null,  array('class' => 'btn btn-primary'))!!}
+		<a href="javascript:history.back()" class="btn btn-success">Back</a>
+		{!! Html::linkRoute('credits_list', "Credits List",null,  array('class' => 'btn btn-primary'))!!}
 	<br>
 	<h1>Invest in credit #{{$creditObj->external_id}}</h2>
 	<div class="alert alert-info">

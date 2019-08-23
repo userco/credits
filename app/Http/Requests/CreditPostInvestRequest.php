@@ -31,7 +31,7 @@ class CreditPostInvestRequest extends FormRequest
 	{
 		return [
 			'investment.required' => 'Enter a numeric value, please',
-			'investment.numeric'  => 'Enter a numeric value, please',
+			'investment.numeric'  => 'Enter a numeric value, please. The decimal point is "."',
 			'investment.gt'       => 'Enter positive number, please', 
 		];
 	}
