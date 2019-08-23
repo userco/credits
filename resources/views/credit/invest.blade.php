@@ -6,13 +6,13 @@
 	<br>
 	<h1>Invest in credit #{{$creditObj->external_id}}</h2>
 	<div class="alert alert-info">
-	<p>Total: <b>{{$creditObj->total}} &nbsp;BGN</b></p>
-	@isset($invested_amount)
-		<p>Invested amount: <b>{{$invested_amount}} &nbsp;BGN</b></p>
-	@endisset	
-	@isset($investment)
-		<p>You have invested in this credit: <b>{{$investment}}&nbsp;BGN</b></p>
-	@endisset
+		<p>Total: <b>{{$creditObj->total}} &nbsp;BGN</b></p>
+		@isset($invested_amount)
+			<p>Invested amount: <b>{{$invested_amount}} &nbsp;BGN</b></p>
+		@endisset	
+		@isset($investment)
+			<p>You have invested in this credit: <b>{{$investment}}&nbsp;BGN</b></p>
+		@endisset
 	</div>
 	@isset($notify)
 		<div class="alert alert-danger">
@@ -48,5 +48,4 @@
 			</div>
 		</div>	
 	{{ Form::close() }}
-
 @endsection

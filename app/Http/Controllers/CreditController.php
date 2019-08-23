@@ -14,15 +14,20 @@ use App\Http\Requests\CreditPostListRequest;
 use App\Http\Requests\CreditPostInvestRequest;
 
 class CreditController extends Controller{
-
+	
+	//get list of credits
 	public function getList(Request $request)
 	{	
+		//get all credits to pages
 		$credits = Credit::paginate(2);
+		
 		if($request->session()){
 			$min_period = ($request->session()->get('min_period')!="")?$request->session()->get('min_period'):0;
 			$max_period = $request->session()->get('max_period')?$request->session()->get('max_period'):36;
 			$min_amount = $request->session()->get('min_amount')?$request->session()->get('min_amount'):1;
 			$max_amount = $request->session()->get('max_amount');
+		
+			//if max amount is not set
 			if(!$max_amount){
 				
 				$credits = DB::table('credit')
@@ -31,7 +36,9 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->paginate(2);
-			}else{
+			}else
+			//if max amount is set
+			{
 				$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
 						 ->where('period', '>=', $min_period)
@@ -39,7 +46,9 @@ class CreditController extends Controller{
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
 						 ->paginate(2);
-			}	
+			}
+
+			//message for display	
 			$notice ="<div class='alert alert-info'>";			 
 			$notice .= "<b>Search results</b>  ";
 			$notice .= "<br>";
@@ -60,13 +69,12 @@ class CreditController extends Controller{
 																'notice'=> $notice));		
 	}
 
-
-
 	public function postList(CreditPostListRequest $request){
 		
+		//get all credits to pages
 		$credits = Credit::paginate(2);
 		$input = Input::get();
-		//dd($input);
+		
 		if($input){
 			$max_period = ($input['max_period']!="")?$input['max_period']:36;
 			$min_period = ($input['min_period']!="")?$input['min_period']:0;
@@ -75,10 +83,9 @@ class CreditController extends Controller{
 			
 			$min_amount = ($input['min_amount']!="")? $input['min_amount']:1;
 			$request->session()->put('min_amount', $min_amount);
-			
-			
+		
 			$max_amount = $input['max_amount'];
-			
+			//if max amount is not set
 			if(!$max_amount){
 				$request->session()->put('max_amount', 0);
 				$credits = DB::table('credit')
@@ -87,25 +94,28 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->paginate(2);
-			}else{	
-			
-			$request->session()->put('max_amount', $max_amount);
-			
-			$credits = DB::table('credit')
-						 ->select(DB::raw('*'))
-						 ->where('period', '>=', $min_period)
-						 ->where('period', '<=', $max_period)
-						 ->where('total', '>=', $min_amount)
-						 ->where('total', '<=', $max_amount)
-						 ->paginate(2);
+			}
+			else
+			//if max amount is set
+			{	
+				$request->session()->put('max_amount', $max_amount);
+				$credits = DB::table('credit')
+							 ->select(DB::raw('*'))
+							 ->where('period', '>=', $min_period)
+							 ->where('period', '<=', $max_period)
+							 ->where('total', '>=', $min_amount)
+							 ->where('total', '<=', $max_amount)
+							 ->paginate(2);
 			}			 
 		}	
-		else{
+		else
+		//if there is no input	
+		{
 			$min_period = $request->session()->get('min_period');
 			$max_period = $request->session()->get('max_period');
 			$min_amount = $request->session()->get('min_amount');
 			$max_amount = $request->session()->get('max_amount');
-			
+			//if max amount is not set
 			if(!$max_amount){
 				$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
@@ -113,7 +123,9 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->paginate(2);
-			}else{
+			}else
+			//if max amount is set
+			{
 				$credits = DB::table('credit')
 						 ->select(DB::raw('*'))
 						 ->where('period', '>=', $min_period)
@@ -122,8 +134,8 @@ class CreditController extends Controller{
 						 ->where('total', '<=', $max_amount)
 						 ->paginate(2);
 			}
-			
-		}	
+		}
+		//message for display			
 		$notice ="<div class='alert alert-info'>";			 
 		$notice .= "<b>Search results</b>  ";
 		$notice .= "<br>";
@@ -140,12 +152,17 @@ class CreditController extends Controller{
 		return View::make('credit/credits_list')->with(array ('credits' => $credits,
 																'notice'=> $notice));	
 	}
+	
+	//make investment in credit
 	public function getInvest(Request $request, $creditId)
 	{	
+		//get logged in user
 		$user = Auth::user();
 		$userId = $user->id;
 		$creditObj = Credit::find($creditId);
 		$invested_amount = $creditObj->invested_amount;
+		
+		//get all investments of the user in that credit
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
@@ -160,13 +177,14 @@ class CreditController extends Controller{
 	}
 	public function postInvest(CreditPostInvestRequest $request, $creditId)
 	{	
-
+		//get logged in user
 		$user      = Auth::user();
 		$userId    = $user->id;
 		$credits   = Credit::all();
 		$creditObj = Credit::find($creditId);
 		$invested_amount = $creditObj->invested_amount;
 		
+		//get all investments of the user in that credit
 		$investment = DB::table('invest_credit')
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
@@ -177,13 +195,18 @@ class CreditController extends Controller{
 		$invest = $input['investment'];			
 		
 		$now_invested = $investment;
+		
+		//if the new investment plus the invested amount is less than total amount of the credit
 		if(($invested_amount + $invest) < $creditObj->total){
+			
+			//save the new investment
 			$invObj = new CreditInvest;
 			$invObj->user_id    = $userId;
 			$invObj->credit_id  = $creditId;
 			$invObj->investment = $invest;
-		
 			$invObj->save();
+			
+			//save the new invested amount
 			$creditObj->invested_amount = $invested_amount + $invest;	
 			$creditObj->save();
 			$now_invested += $invest;
@@ -195,7 +218,9 @@ class CreditController extends Controller{
 														'notif'         => $notif,
 														));		
 		}
-		else{		
+		else
+		//if the new investment plus the invested amount is not less than total amount of the credit
+		{		
 			$notify = "The investments are greater than the credit amount";
 			return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
 														'investment'     => $investment,

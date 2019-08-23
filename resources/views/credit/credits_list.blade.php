@@ -49,39 +49,38 @@
 	{{ Form::close() }}
 
 	@isset($notice)
-	{!!$notice!!}
+		{!!$notice!!}
 	@endisset
 		
 	@isset($credits)
-	@if(count($credits)== 0)
-		<div class="alert alert-warning">
-			<strong>Sorry!</strong> No Credits Found.
-		</div>                                      
-	@else
-	<table class="table table-stripped">
-	<tr>
-		<td>External ID</td>
-		<td> Period </td>
-		<td> Amount </td>
-		<td>Invested amount</td>
-		<td>Action</td>
-	<tr>
-	
-		@foreach($credits as $credit) 
-	<tr>
-		<td>{{$credit->external_id}}</td>
-		<td>{{$credit->period}}&nbsp;months</td>
-		<td>{{$credit->total}}&nbsp;BGN</td>
-		<td>{{$credit->invested_amount}}&nbsp;BGN</td>
-		<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
-	</tr>	
-		@endforeach
-	</table>
-		
-	{{ $credits->links() }}
-	@endif
+		@if(count($credits)== 0)
+			<div class="alert alert-warning">
+				<strong>Sorry!</strong> No Credits Found.
+			</div>                                      
+		@else
+			<table class="table table-stripped">
+			<tr>
+				<td>External ID</td>
+				<td> Period </td>
+				<td> Amount </td>
+				<td>Invested amount</td>
+				<td>Action</td>
+			<tr>
+			
+				@foreach($credits as $credit) 
+			<tr>
+				<td>{{$credit->external_id}}</td>
+				<td>{{$credit->period}}&nbsp;months</td>
+				<td>{{$credit->total}}&nbsp;BGN</td>
+				<td>{{$credit->invested_amount}}&nbsp;BGN</td>
+				<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
+			</tr>	
+				@endforeach
+			</table>
+				
+			{{ $credits->links() }}
+		@endif
 	@endisset
-	
-	
+
 	</div>
 @endsection	

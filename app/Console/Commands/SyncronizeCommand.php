@@ -45,6 +45,8 @@ class SyncronizeCommand extends Command
     {
 		$guzzle = new Client;
 	    $state = \Str::random(40);
+		
+		//log in the bank
 		$response = $guzzle->post('https://dbank.donatix.info/oauth/token', 
 		[
 			'headers' => [
@@ -60,8 +62,10 @@ class SyncronizeCommand extends Command
 			],
 			
 		]);
+		//get login token
 		$token = json_decode((string) $response->getBody(), true)['access_token'];
 		
+		//get credits list
 		$response2 = $guzzle->get('https://dbank.donatix.info/api/v1/credits',
 		[
 			'headers'=> [
@@ -71,11 +75,10 @@ class SyncronizeCommand extends Command
 						]
 		]);
 		$credits = json_decode($response2->getBody(),true);
-		$i=0;
 		
+		//insert/modify credits in the database
 		foreach($credits as $credit){
-			
-			if($i>10) break;
+
 			$external_id = $credit['external_id'];
 			$type = $credit['type'];
 			$total = $credit['total'];
@@ -85,7 +88,7 @@ class SyncronizeCommand extends Command
 			$creditId = DB::table('credit')->select('id')->where('external_id', $external_id)->first();
 			$id = ($creditId)?$creditId->id :null;
 			$creditObject = ($id)? Credit::find($id): null;
-			
+			//insert new credit
 			if(!$creditObject){
 				$creditObject = new Credit;
 				$creditObject->external_id = $external_id;
@@ -94,17 +97,17 @@ class SyncronizeCommand extends Command
 				$creditObject->request_number = $request_number;
 				$creditObject->period = $period;
 				$creditObject->invested_amount = 0;
-				
 				$creditObject->save();
-				
 			}else{
+				//update existing credit
 				if($creditObject->total > $total){
 					$creditObject->total = $total;
 					$creditObject->save();
 				}
-			}
+			}//check if the invested amount is greater than or equal to total amount
 			if($creditObject->total <= $creditObject->invested_amount){
 				$credit_id = $creditObject->id;
+				//get emails of investors
 				$emails = DB::table('invest_credit')
 						 ->join('users', 'user_id', '=', 'users.id')
 						 ->select('email')
@@ -112,6 +115,7 @@ class SyncronizeCommand extends Command
 						 ->get();
 				$list_emails = [];
 				$email_array = json_decode($emails,true);
+				//send async mails to investors
 				foreach($email_array as $email){
 					$email_address = $email['email'];
 					if(!in_array($email_address, $list_emails)){
@@ -120,8 +124,7 @@ class SyncronizeCommand extends Command
 					}
 			    }			
 						 
-			}
-			$i++;		
+			}	
 		}
 	}
 }
