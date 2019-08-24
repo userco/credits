@@ -141,7 +141,7 @@ class CreditController extends Controller{
 		$notice .= "<br>";
 		$notice .= "Minimum period is: <b>".$min_period." months</b><br>";
 		$notice .= "Maximum period is: <b>".$max_period." months</b><br>";
-		$notice .= "Minimum amount is: <b>".$min_amount."BGN</b><br>";
+		$notice .= "Minimum amount is: <b>".$min_amount." BGN</b><br>";
 		if(!$max_amount){
 			 $notice .= "Maximum amount is: <b>unlimited</b><br>";
 		}else{	
@@ -234,6 +234,7 @@ class CreditController extends Controller{
 														'creditObj'       => $creditObj
 														));		
 	}
+	//get credit data
 	public function getCredit($credit_id){
 		$credit = Credit::find($credit_id);	
 		return $credit->toJson();

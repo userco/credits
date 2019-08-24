@@ -69,7 +69,6 @@
 			
 			@foreach($credits as $credit) 
 				@php 
-					$page = app('request')->input('page');
 					$id = $credit->id;
 					$cid = "class".$id;
 				@endphp	
@@ -77,9 +76,9 @@
 				<td>{{$credit->external_id}}</td>
 				<td>{{$credit->period}}</td>
 				<td>{{$credit->total}}</td>
-				<td><credit-component
-						:credit_id={{$id}}>
-					</credit-component><div class={{$cid}}></div></td>
+				<td><credit-component :credit_id={{$id}}></credit-component>
+					<div class={{$cid}}></div>
+				</td>
 				<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
 			</tr>	
 				@endforeach
@@ -87,5 +86,5 @@
 			{{ $credits->links() }}
 		@endif
 	@endisset
-	</div>
+</div>
 @endsection	
