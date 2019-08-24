@@ -19,7 +19,7 @@ class CreditController extends Controller{
 	public function getList(Request $request)
 	{	
 		//get all credits to pages
-		$credits = Credit::paginate(2);
+		$credits = Credit::paginate(5);
 		
 		if($request->session()){
 			$min_period = ($request->session()->get('min_period')!="")?$request->session()->get('min_period'):0;
@@ -35,7 +35,7 @@ class CreditController extends Controller{
 						 ->where('period', '>=', $min_period)
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
-						 ->paginate(2);
+						 ->paginate(5);
 			}else
 			//if max amount is set
 			{
@@ -45,7 +45,7 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
-						 ->paginate(2);
+						 ->paginate(5);
 			}
 
 			//message for display	
@@ -72,7 +72,7 @@ class CreditController extends Controller{
 	public function postList(CreditPostListRequest $request){
 		
 		//get all credits to pages
-		$credits = Credit::paginate(2);
+		$credits = Credit::paginate(5);
 		$input = Input::get();
 		
 		if($input){
@@ -93,7 +93,7 @@ class CreditController extends Controller{
 						 ->where('period', '>=', $min_period)
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
-						 ->paginate(2);
+						 ->paginate(5);
 			}
 			else
 			//if max amount is set
@@ -105,7 +105,7 @@ class CreditController extends Controller{
 							 ->where('period', '<=', $max_period)
 							 ->where('total', '>=', $min_amount)
 							 ->where('total', '<=', $max_amount)
-							 ->paginate(2);
+							 ->paginate(5);
 			}			 
 		}	
 		else
@@ -122,7 +122,7 @@ class CreditController extends Controller{
 						 ->where('period', '>=', $min_period)
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
-						 ->paginate(2);
+						 ->paginate(5);
 			}else
 			//if max amount is set
 			{
@@ -132,7 +132,7 @@ class CreditController extends Controller{
 						 ->where('period', '<=', $max_period)
 						 ->where('total', '>=', $min_amount)
 						 ->where('total', '<=', $max_amount)
-						 ->paginate(2);
+						 ->paginate(5);
 			}
 		}
 		//message for display			
@@ -167,7 +167,7 @@ class CreditController extends Controller{
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
 						 ->where('credit_id', '=', $creditId)
-						 ->get()[0];
+						 ->first();
 		$investment = $investment->investment;
 
 		return View::make('credit/invest')->with(array ('invested_amount'=>$invested_amount,
@@ -189,15 +189,16 @@ class CreditController extends Controller{
 						 ->select(DB::raw('SUM(investment) as investment'))
 						 ->where('user_id', '=', $userId)
 						 ->where('credit_id', '=', $creditId)
-						 ->get()[0];
+						 ->first();
 		$investment = $investment->investment;
 		$input = Input::get();
 		$invest = $input['investment'];			
 		
 		$now_invested = $investment;
 		
-		//if the new investment plus the invested amount is less than total amount of the credit
-		if(($invested_amount + $invest) < $creditObj->total){
+		//if the new investment plus the invested amount is less than or equal to total amount of
+		//the credit
+		if(($invested_amount + $invest) <= $creditObj->total){
 			
 			//save the new investment
 			$invObj = new CreditInvest;
@@ -233,5 +234,9 @@ class CreditController extends Controller{
 														'creditObj'       => $creditObj
 														));		
 	}
+	public function getCredit($credit_id){
+		$credit = Credit::find($credit_id);	
+		return $credit->toJson();
+	}	
 	
 }    

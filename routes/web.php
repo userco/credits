@@ -37,4 +37,9 @@ Route::group(['middleware' => 'auth'], function () {
 		'middleware' => ['web'],
 		'uses'      => 'CreditController@postInvest',
 	 ]);
+	 Route::get('/credit/{creditId}', [
+		'as'        => 'credit',
+		'middleware' => ['web'],
+		'uses'      => 'CreditController@getCredit',
+	 ]);
 });

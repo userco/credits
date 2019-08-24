@@ -61,26 +61,31 @@
 			<table class="table table-stripped">
 			<tr>
 				<td>External ID</td>
-				<td> Period </td>
-				<td> Amount </td>
-				<td>Invested amount</td>
+				<td> Period (months) </td>
+				<td> Amount (BGN) </td>
+				<td>Invested amount (BGN)</td>
 				<td>Action</td>
 			<tr>
 			
-				@foreach($credits as $credit) 
+			@foreach($credits as $credit) 
+				@php 
+					$page = app('request')->input('page');
+					$id = $credit->id;
+					$cid = "class".$id;
+				@endphp	
 			<tr>
 				<td>{{$credit->external_id}}</td>
-				<td>{{$credit->period}}&nbsp;months</td>
-				<td>{{$credit->total}}&nbsp;BGN</td>
-				<td>{{$credit->invested_amount}}&nbsp;BGN</td>
+				<td>{{$credit->period}}</td>
+				<td>{{$credit->total}}</td>
+				<td><credit-component
+						:credit_id={{$id}}>
+					</credit-component><div class={{$cid}}></div></td>
 				<td>{{ Html::linkRoute('invest', "Invest" , ['creditId' => $credit->id],['class' => 'btn btn-danger']) }}</td>
 			</tr>	
 				@endforeach
 			</table>
-				
 			{{ $credits->links() }}
 		@endif
 	@endisset
-
 	</div>
 @endsection	
