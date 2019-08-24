@@ -31,9 +31,9 @@
 						  $(".class"+this.credit_id).append(x);
                         });
             },
-			},
+		},
 				
-		}
+	}
 		
 		
 		
