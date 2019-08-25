@@ -27,8 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('Synchronize')
-                  ->dailyAt('13:00');
+        $schedule->command('sync:db')
+				 ->daily();
     }
 
     /**
